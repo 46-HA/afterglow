@@ -1,26 +1,34 @@
-import './index.css'; 
+import "./index.css"
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
-export default function App() {
+function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="hero">
-      <h1>Afterglow</h1>
-      <p>Change the trajectory of your life.</p>
-      <p> Build good habits</p>
-      <button>Explore</button>
+      <h1>afterglow.</h1>
+      <p>change the trajectory of your life.</p>
+      <p>build good habits.</p>
+      
+      <button onClick={() => navigate('/login')}>Log In</button>
     </div>
   );
 }
-/*
-function App() {
 
+function Login() {
   return (
-    <>
-      <div>
-        <h1>afterglow.</h1>
-      </div>
-    </>
-  )
+    <div className="login">
+      <h2>login.</h2>
+      <p>enter username</p>
+    </div>
+  );
 }
 
-export default App
-*/ 
+export default function App() {
+  return(
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+    </Routes>
+  )
+}
