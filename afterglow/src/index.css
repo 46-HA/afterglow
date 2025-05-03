@@ -17,6 +17,17 @@ body {
 }
 
 .hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #aaa;
+  max-width: 600px;
+}
+
+.hero button{
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
   padding: 0.75rem 1.5rem;
@@ -28,3 +39,4 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
