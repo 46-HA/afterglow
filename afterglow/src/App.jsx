@@ -1,8 +1,9 @@
 import './index.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 
-let usersDB = {}; // Fake in-memory DB
+const API_URL = 'http://localhost:2044/api';
 
 function Home() {
   const navigate = useNavigate();
@@ -24,26 +25,38 @@ function Login() {
   const [generatedCode, setGeneratedCode] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!usersDB[email]) {
-      setError('No account found with that email.');
-      return;
+    try {
+      const response = await axios.post(`${API_URL}/check-user`, { email });
+      
+      if (!response.data.exists) {
+        setError('No account found with that email.');
+        return;
+      }
+      
+      const newCode = Math.floor(1000 + Math.random() * 9000);
+      setGeneratedCode(newCode);
+      console.log(`Verification code sent to ${email}: ${newCode}`);
+      setError('');
+    } catch (error) {
+      setError('Server error. Please try again later.');
+      console.error('Login error:', error);
     }
-
-    const newCode = Math.floor(1000 + Math.random() * 9000);
-    setGeneratedCode(newCode);
-    console.log(`Verification code sent to ${email}: ${newCode}`);
-    setError('');
   };
 
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
 
     if (parseInt(code) === generatedCode) {
-      alert('Login successful!');
-      navigate('/dashboard');
+      try {
+        localStorage.setItem('userEmail', email);
+        navigate('/dashboard');
+      } catch (error) {
+        setError('Server error. Please try again later.');
+        console.error('Verification error:', error);
+      }
     } else {
       setError('Incorrect verification code.');
     }
@@ -98,29 +111,46 @@ function SignUp() {
   const [generatedCode, setGeneratedCode] = useState('');
   const navigate = useNavigate();
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
-    if (usersDB[email]) {
-      setError('Email already has an account.');
-      return;
+    try {
+      const checkResponse = await axios.post(`${API_URL}/check-user`, { email });
+      
+      if (checkResponse.data.exists) {
+        setError('Email already has an account.');
+        return;
+      }
+
+      const newCode = Math.floor(1000 + Math.random() * 9000);
+      setGeneratedCode(newCode);
+      console.log(`Verification code sent to ${email}: ${newCode}`);
+      setError('');
+    } catch (error) {
+      setError('Server error. Please try again later.');
+      console.error('Sign-up error:', error);
     }
-
-    usersDB[email] = { firstName, dob, isVerified: false };
-
-    const newCode = Math.floor(1000 + Math.random() * 9000);
-    setGeneratedCode(newCode);
-    console.log(`Verification code sent to ${email}: ${newCode}`);
-    setError('');
   };
 
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
 
     if (parseInt(code) === generatedCode) {
-      usersDB[email].isVerified = true;
-      alert('Account created successfully!');
-      navigate('/login');
+      try {
+        await axios.post(`${API_URL}/signup`, {
+          firstName,
+          dob,
+          email
+        });
+        
+        await axios.post(`${API_URL}/verify`, { email });
+        
+        alert('Account created successfully!');
+        navigate('/login');
+      } catch (error) {
+        setError('Server error. Please try again later.');
+        console.error('Verification error:', error);
+      }
     } else {
       setError('Incorrect verification code.');
     }

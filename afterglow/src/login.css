@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #333;
+    line-height: 1.6;
+    transition: all 0.3s ease-in-out;
+}
+
+.login {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 2.5rem;
+    background: transparent;
+    border-radius: 14px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login h2 {
+    margin-bottom: 1.2rem;
+    font-size: 2rem;
+    color: #f0e68c;
+}
+
+.login form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.login label {
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #ccc;
+}
+
+.login input {
+    padding: 0.75rem;
+    border: 1px solid #444;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #1e1e1e;
+    color: white;
+}
+
+.login button {
+    background: linear-gradient(to right, #2f2f2f, #b8860b);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.login button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #1e1e1e, #a97400);
+}
+
+/* error message */
+.login p[style*="red"] {
+    margin-top: -0.5rem;
+    font-size: 0.9rem;
+}
+
+.hero {
+    text-align: center;
+    padding: 5rem 1rem;
+    background: linear-gradient(to right, #1c1c1c, #b8860b);
+    color: white;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.hero h1 {
+    font-size: 1.3rem;
+    margin: 1rem 0;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin: 1rem 0;
+}
+
+.hero button {
+    margin-top: 2.5rem;
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    background: white;
+    color: #b8860b;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.hero button:hover {
+    background: #ccc;
+}
