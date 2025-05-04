@@ -8,3 +8,8 @@ First, make an account.
 Accounts
 Daily Check-Ins
 Journals
+
+To Do:
+use a real DB
+add a daily journal thing
+add a way to check if the email is legit or not
