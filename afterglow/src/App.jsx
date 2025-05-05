@@ -26,10 +26,9 @@ function Login() {
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/;
-  return emailRegex.test(email);
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,13 +36,13 @@ function Login() {
     const emailLowerCase = email.toLowerCase();
     setEmail(emailLowerCase);
 
-    if(!validateEmail(emailLowerCase)) {
-      setError('please enter a valid email..');
+    if (!validateEmail(emailLowerCase)) {
+      setError('Please enter a valid email address.');
       return;
     }
 
     try {
-      const response = await axios.post(`${API_URL}/check-user`, { email });
+      const response = await axios.post(`${API_URL}/check-user`, { email: emailLowerCase });
       
       if (!response.data.exists) {
         setError('no account found with that email..');
@@ -52,7 +51,7 @@ function Login() {
       
       const newCode = Math.floor(1000 + Math.random() * 9000);
       setGeneratedCode(newCode);
-      console.log(`verifcation code sent to ${email}: ${newCode}`);
+      console.log(`verification code sent to ${emailLowerCase}: ${newCode}`);
       setError('');
     } catch (error) {
       setError('server error, please try again later..');
@@ -88,7 +87,7 @@ function Login() {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.toLowerCase())}
               placeholder="enter your email..."
               required
             />
@@ -125,24 +124,24 @@ function SignUp() {
   const [generatedCode, setGeneratedCode] = useState('');
   const navigate = useNavigate();
 
-const validateEmail = (email) => {
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/
-  return emailRegex.test(email);
-}
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-  const emailLowerCase = email.toLowerCase();
-  setEmail(emailLowerCase);
+    const emailLowerCase = email.toLowerCase();
+    setEmail(emailLowerCase);
 
-  if(!validateEmail(emailLowerCase)){
-    setError('please enter a valid email..');
-    return;
-  }
+    if (!validateEmail(emailLowerCase)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
 
     try {
-      const checkResponse = await axios.post(`${API_URL}/check-user`, { email });
+      const checkResponse = await axios.post(`${API_URL}/check-user`, { email: emailLowerCase });
       
       if (checkResponse.data.exists) {
         setError('email already has an account..');
@@ -151,7 +150,7 @@ const validateEmail = (email) => {
 
       const newCode = Math.floor(1000 + Math.random() * 9000);
       setGeneratedCode(newCode);
-      console.log(`verification code sent to ${email}: ${newCode}`);
+      console.log(`verification code sent to ${emailLowerCase}: ${newCode}`);
       setError('');
     } catch (error) {
       setError('server error, please try again later.');
@@ -195,7 +194,7 @@ const validateEmail = (email) => {
             <input
               type="text"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => setFirstName(e.target.value.toLowerCase())}
               placeholder="enter your name"
               required
             />
@@ -214,7 +213,7 @@ const validateEmail = (email) => {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.toLowerCase())}
               placeholder="Enter your email"
               required
             />
