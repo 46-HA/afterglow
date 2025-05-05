@@ -10,5 +10,5 @@ Daily Check-Ins
 Journals
 
 To Do:
-add a daily journal thing
+add a daily journal thing (w/ AI)
 add a way to check if the email is legit or not

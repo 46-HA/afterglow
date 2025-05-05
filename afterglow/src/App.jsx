@@ -13,7 +13,7 @@ function Home() {
       <h1>afterglow.</h1>
       <p>change the trajectory of your life.</p>
       <p>build good habits.</p>
-      <button onClick={() => navigate('/login')}>Log In</button>
+      <button onClick={() => navigate('/login')}>log in</button>
     </div>
   );
 }
@@ -25,24 +25,38 @@ function Login() {
   const [generatedCode, setGeneratedCode] = useState('');
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/;
+  return emailRegex.test(email);
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const emailLowerCase = email.toLowerCase();
+    setEmail(emailLowerCase);
+
+    if(!validateEmail(emailLowerCase)) {
+      setError('please enter a valid email..');
+      return;
+    }
 
     try {
       const response = await axios.post(`${API_URL}/check-user`, { email });
       
       if (!response.data.exists) {
-        setError('No account found with that email.');
+        setError('no account found with that email..');
         return;
       }
       
       const newCode = Math.floor(1000 + Math.random() * 9000);
       setGeneratedCode(newCode);
-      console.log(`Verification code sent to ${email}: ${newCode}`);
+      console.log(`verifcation code sent to ${email}: ${newCode}`);
       setError('');
     } catch (error) {
-      setError('Server error. Please try again later.');
-      console.error('Login error:', error);
+      setError('server error, please try again later..');
+      console.error('login error:', error);
     }
   };
 
@@ -54,50 +68,50 @@ function Login() {
         localStorage.setItem('userEmail', email);
         navigate('/dashboard');
       } catch (error) {
-        setError('Server error. Please try again later.');
-        console.error('Verification error:', error);
+        setError('server error, please try again later..');
+        console.error('verification error:', error);
       }
     } else {
-      setError('Incorrect verification code.');
+      setError('incorrect verification code.');
     }
   };
 
   return (
     <div className="login">
-      <h2>Log In</h2>
+      <h2>log in</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {!generatedCode ? (
         <form onSubmit={handleSubmit}>
           <div>
-            <label>Email</label>
+            <label>email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email..."
+              placeholder="enter your email..."
               required
             />
           </div>
-          <button type="submit">Send Code</button>
+          <button type="submit">send code</button>
         </form>
       ) : (
         <form onSubmit={handleVerify}>
           <div>
-            <label>Enter Verification Code</label>
+            <label>enter verification code</label>
             <input
               type="number"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="Enter verification code..."
+              placeholder="enter verification code..."
               required
             />
           </div>
-          <button type="submit">Verify</button>
+          <button type="submit">verify</button>
         </form>
       )}
 
-      <button onClick={() => navigate('/signup')}>Sign Up</button>
+      <button onClick={() => navigate('/signup')}>sign up</button>
     </div>
   );
 }
@@ -111,24 +125,37 @@ function SignUp() {
   const [generatedCode, setGeneratedCode] = useState('');
   const navigate = useNavigate();
 
+const validateEmail = (email) => {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/
+  return emailRegex.test(email);
+}
+
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+  const emailLowerCase = email.toLowerCase();
+  setEmail(emailLowerCase);
+
+  if(!validateEmail(emailLowerCase)){
+    setError('please enter a valid email..');
+    return;
+  }
 
     try {
       const checkResponse = await axios.post(`${API_URL}/check-user`, { email });
       
       if (checkResponse.data.exists) {
-        setError('Email already has an account.');
+        setError('email already has an account..');
         return;
       }
 
       const newCode = Math.floor(1000 + Math.random() * 9000);
       setGeneratedCode(newCode);
-      console.log(`Verification code sent to ${email}: ${newCode}`);
+      console.log(`verification code sent to ${email}: ${newCode}`);
       setError('');
     } catch (error) {
-      setError('Server error. Please try again later.');
-      console.error('Sign-up error:', error);
+      setError('server error, please try again later.');
+      console.error('sign-up error:', error);
     }
   };
 
@@ -145,36 +172,36 @@ function SignUp() {
         
         await axios.post(`${API_URL}/verify`, { email });
         
-        alert('Account created successfully!');
+        alert('account created successfully!');
         navigate('/login');
       } catch (error) {
-        setError('Server error. Please try again later.');
-        console.error('Verification error:', error);
+        setError('server error, please try again later..');
+        console.error('verification error:', error);
       }
     } else {
-      setError('Incorrect verification code.');
+      setError('incorrect verification code..');
     }
   };
 
   return (
     <div className="login">
-      <h2>Sign Up</h2>
+      <h2>sign up</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {!generatedCode ? (
         <form onSubmit={handleSignUp}>
           <div>
-            <label>First Name</label>
+            <label>name</label>
             <input
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder="enter your name"
               required
             />
           </div>
           <div>
-            <label>Date of Birth</label>
+            <label>birthday</label>
             <input
               type="date"
               value={dob}
@@ -183,7 +210,7 @@ function SignUp() {
             />
           </div>
           <div>
-            <label>Email</label>
+            <label>email</label>
             <input
               type="email"
               value={email}
@@ -192,21 +219,21 @@ function SignUp() {
               required
             />
           </div>
-          <button type="submit">Send Code</button>
+          <button type="submit">send code</button>
         </form>
       ) : (
         <form onSubmit={handleVerify}>
           <div>
-            <label>Enter Verification Code</label>
+            <label>enter verification code</label>
             <input
               type="number"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="Enter the code"
+              placeholder="enter the code"
               required
             />
           </div>
-          <button type="submit">Verify</button>
+          <button type="submit">verify</button>
         </form>
       )}
     </div>
@@ -216,8 +243,8 @@ function SignUp() {
 function Dashboard() {
   return (
     <div>
-      <h2>Dashboard</h2>
-      <p>Welcome to the app!</p>
+      <h2>dashboard</h2>
+      <p>welcome to the app!</p>
     </div>
   );
 }
