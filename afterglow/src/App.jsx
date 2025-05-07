@@ -2,7 +2,8 @@ import './index.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
-
+import MoodTracker from './MoodTracker.jsx';
+import Dashboard from './Dashboard';
 ///dont change, 2044 is the port for the server
 const API_URL = 'http://localhost:2044/api';
 
@@ -112,109 +113,6 @@ function Login() {
       )}
 
       <button onClick={() => navigate('/signup')}>sign up</button>
-    </div>
-  );
-}
-
-function Dashboard() {
-  const [journalPrompt, setJournalPrompt] = useState('');
-  const [journalEntry, setJournalEntry] = useState(''); // added for user journal input
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const getJournalIdea = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await axios.post(
-        'https://ai.hackclub.com/chat/completions',
-        {
-          messages: [{ role: 'user', content: 'give me a thoughtful idea for a journal. just give me the idea, make it 2 sentences max and make the response LOWERCASE' }],
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      const content = response.data.choices?.[0]?.message?.content;
-      setJournalPrompt(content || 'No prompt returned.');
-    } catch (err) {
-      console.error('Error fetching journal prompt:', err);
-      setError('failed to fetch journal prompt.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEntryChange = (e) => {
-    const lowercaseText = e.target.value.toLowerCase(); // forces input to lowercase
-    setJournalEntry(lowercaseText);
-  }; 
-
-  const handleSaveEntry = async () => {
-    const userEmail = localStorage.getItem('userEmail');
-
-    try {
-      const response = await axios.post(`${API_URL}/check-user`, { email: userEmail });
-
-      if (!response.data.userId) {
-        setError('user not found');
-        return;
-      }
-
-      await axios.post(`${API_URL}/journal`, {
-        userId: response.data.userId,
-        content: journalEntry,
-      });
-
-      alert('journal is updated');
-    } catch (err) {
-      console.error(`error saving journal: ${err}`);
-      setError('failed to save journal entry');
-    }
-  };
-
-  return (
-    <div className="dashboard">
-      <h2>dashboard</h2>
-      <p>welcome to the app!</p>
-
-      <button onClick={getJournalIdea}>
-        {loading ? 'getting idea...' : 'get journal idea'}
-      </button>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      {journalPrompt && (
-        <div>
-          <h3>journal idea:</h3>
-          <p>{journalPrompt}</p>
-
-          <textarea
-            value={journalEntry}
-            onChange={handleEntryChange}
-            rows={6}
-            placeholder="start writing here... lowercase only"
-            style={{
-              width: '100%',
-              marginTop: '1rem',
-              padding: '1rem',
-              fontSize: '1rem',
-              background: '#1e1e1e',
-              color: 'white',
-              border: '1px solid #444',
-              borderRadius: '8px',
-              resize: 'none',
-            }}
-          /> 
-
-          <button onClick={handleSaveEntry} style={{ marginTop: '1rem' }}>
-            save entry
-          </button> 
-        </div>
-      )}
     </div>
   );
 }
@@ -351,6 +249,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/mood element={<MoodTracker />}" />
     </Routes>
   );
 }
