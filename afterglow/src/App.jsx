@@ -249,7 +249,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/mood element={<MoodTracker />}" />
+      <Route path="/mood" element={<MoodTracker />} />
     </Routes>
   );
 }

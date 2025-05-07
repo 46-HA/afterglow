@@ -75,6 +75,10 @@ export default function Dashboard() {
       <h2>dashboard</h2>
       <p>welcome to afterglow!</p>
 
+      <button onClick={() => navigate('/mood')} style={{ marginTop: "1rem"}}>
+        track your mood
+      </button>
+
       <button onClick={getJournalIdea}>
         {loading ? 'getting idea...' : 'get journal idea'}
       </button>
