@@ -75,11 +75,15 @@ export default function Dashboard() {
       <h2>dashboard</h2>
       <p>welcome to afterglow!</p>
 
-      <button onClick={() => navigate('/mood')} style={{ marginTop: "1rem"}}>
+      <button onClick={() => navigate('/mood')} style={{ marginTop: '1rem' }}>
         track your mood
       </button>
 
-      <button onClick={getJournalIdea}>
+<button onClick={() => navigate('/emotion')} style={{ marginTop: '1rem' }}>
+  custom mood tracker
+</button>
+
+      <button onClick={getJournalIdea} style={{ marginTop: '1rem' }}>
         {loading ? 'getting idea...' : 'get journal idea'}
       </button>
 
@@ -110,10 +114,6 @@ export default function Dashboard() {
 
           <button onClick={handleSaveEntry} style={{ marginTop: '1rem' }}>
             save entry
-          </button>
-
-          <button onClick={() => navigate('/mood')} style={{ marginTop: '1rem' }}>
-            track your mood
           </button>
         </div>
       )}

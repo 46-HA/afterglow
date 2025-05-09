@@ -1,0 +1,99 @@
+.mood-page {
+    max-width: 700px;
+    margin: 4rem auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    padding: 2rem;
+    background-color: #121212;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.mood-page h2 {
+    color: #f0e68c;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.mood-page p {
+    font-size: 1rem;
+    color: #bbb;
+    margin-bottom: 1rem;
+}
+
+.mood-graph {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: linear-gradient(135deg, #2b2b2b, #1a1a1a);
+    border: 2px solid #444;
+    border-radius: 12px;
+    margin: 2rem 0;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+.axis {
+    position: absolute;
+    font-size: 0.85rem;
+    color: #aaa;
+    z-index: 1;
+}
+
+.x-axis {
+    bottom: 10px;
+    right: 20px;
+}
+
+.y-axis {
+    top: 10px;
+    left: 10px;
+    transform: rotate(-90deg);
+    transform-origin: left top;
+}
+
+.mood-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #f0e68c;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.mood-data p {
+    color: #f0e68c;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.back-btn {
+    background: linear-gradient(to right, #2f2f2f, #b8860b);
+    color: white;
+    border: none;
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #1e1e1e, #a97400);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

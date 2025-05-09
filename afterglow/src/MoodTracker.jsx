@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './MoodTracker.css';
+import './css/MoodTracker.css';
 
 const moods = [
   { emoji: '😀', label: 'happy', color: "#ffeb3b" },
