@@ -5,6 +5,7 @@ import Dashboard from './Dashboard';
 import Login from './Userlogin';
 import SignUp from "./Usersignup";
 import Emotions from './Emotions.jsx';
+import Reminders from './Reminders.jsx';
 
 ///dont change, 2044 is the port for the server
 const API_URL = 'http://localhost:2044/api';
@@ -31,6 +32,7 @@ export default function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/mood" element={<MoodTracker />} />
       <Route path="/emotion" element={<Emotions />} />
+      <Route path="/reminders" element={<Reminders />} />
     </Routes>
   );
 }
