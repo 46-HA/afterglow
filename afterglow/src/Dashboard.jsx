@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const API_URL = 'http://localhost:2044/api';
-const WEATHER_API_KEY = process.env.WEATHER; // 🔧 Replace with your actual key
+const WEATHER_API_KEY = "0ca7d9ac3fbf28ff0b412e5961fdcd3e"; // lol idc if someone steals this (dotenv isn't working)
 
 export default function Dashboard() {
   const [name, setName] = useState(''); // 👤

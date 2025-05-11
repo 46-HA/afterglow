@@ -1,9 +1,8 @@
-// SignUp.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:2044/api'; // don't change
+const API_URL = 'http://localhost:2044/api';
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
@@ -23,7 +22,6 @@ export default function SignUp() {
     e.preventDefault();
 
     const emailLowerCase = email.toLowerCase();
-    setEmail(emailLowerCase);
 
     if (!validateEmail(emailLowerCase)) {
       setError('please enter a valid email..');
@@ -40,6 +38,7 @@ export default function SignUp() {
 
       const newCode = Math.floor(1000 + Math.random() * 9000);
       setGeneratedCode(newCode);
+      setEmail(emailLowerCase);
       console.log(`verification code sent to ${emailLowerCase}: ${newCode}`);
       setError('');
     } catch (error) {
@@ -59,7 +58,7 @@ export default function SignUp() {
           email
         });
 
-        await axios.post(`${API_URL}/verify`, { email }); // fixed typo in endpoint
+        await axios.post(`${API_URL}/verify`, { email });
 
         alert('account created successfully!');
         navigate('/login');
@@ -104,7 +103,7 @@ export default function SignUp() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value.toLowerCase())}
-              placeholder="Enter your email"
+              placeholder="enter your email"
               required
             />
           </div>
