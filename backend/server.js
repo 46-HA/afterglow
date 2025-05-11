@@ -14,6 +14,16 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+app.post('/api/get-user-name', async (req, res) => {
+  const { email } = req.body;
+  const user = await db.users.findOne({ email });
+  if(user) {
+    res.json({ name: user.name});
+   } else {
+    res.status(404).json({ name: ''});
+   }
+})
+
 app.use(express.json());
 
 mongoose.set('strictQuery', false);

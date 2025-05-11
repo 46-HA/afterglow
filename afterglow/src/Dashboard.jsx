@@ -1,15 +1,65 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const API_URL = 'http://localhost:2044/api';
+const WEATHER_API_KEY = process.env.WEATHER; // 🔧 Replace with your actual key
 
 export default function Dashboard() {
+  const [name, setName] = useState(''); // 👤
+  const [greeting, setGreeting] = useState(''); // ⏰
+  const [weather, setWeather] = useState(null); // 🌦️
+
   const [journalPrompt, setJournalPrompt] = useState('');
   const [journalEntry, setJournalEntry] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('good morning');
+    else if (hour < 18) setGreeting('good afternoon');
+    else setGreeting('good evening');
+  }, []);
+
+  useEffect(() => {
+    const email = localStorage.getItem('userEmail');
+    if (email) {
+      axios
+        .post(`${API_URL}/get-user-name`, { email })
+        .then((res) => {
+          setName(res.data.name || 'friend');
+        })
+        .catch((err) => {
+          console.error('Failed to fetch name:', err);
+          setName('friend');
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`
+          );
+          const data = await response.json();
+          setWeather({
+            temp: data.main.temp,
+            condition: data.weather[0].main,
+            city: data.name,
+          });
+        } catch (err) {
+          console.error('Failed to fetch weather:', err);
+        }
+      });
+    }
+  }, []);
 
   const getJournalIdea = async () => {
     setLoading(true);
@@ -72,16 +122,22 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <h2>dashboard</h2>
-      <p>welcome to afterglow!</p>
+      <h2>{greeting}, {name}! 🌞</h2> {/* 🧑‍💻 */}
+      <p>welcome to afterglow.</p>
+
+      {weather && (
+        <p>
+          it's currently {weather.temp}°C and {weather.condition} in {weather.city}. 🌤️
+        </p>
+      )}
 
       <button onClick={() => navigate('/mood')} style={{ marginTop: '1rem' }}>
         track your mood
       </button>
 
-<button onClick={() => navigate('/emotion')} style={{ marginTop: '1rem' }}>
-  custom mood tracker
-</button>
+      <button onClick={() => navigate('/emotion')} style={{ marginTop: '1rem' }}>
+        custom mood tracker
+      </button>
 
       <button onClick={getJournalIdea} style={{ marginTop: '1rem' }}>
         {loading ? 'getting idea...' : 'get journal idea'}
