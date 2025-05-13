@@ -22,7 +22,10 @@ const UserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // 👈 added
 });
+
+
 
 module.exports = mongoose.model('User', UserSchema);

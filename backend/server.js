@@ -82,6 +82,40 @@ app.post('/api/verify', async (req, res) => {
   }
 });
 
+app.post('/api/friends', async (req, res) => {
+  const { email } = req.body;
+  try {
+     const user = await.User.findOne({ email }).popular('friends', 'firstName email');
+     if(!user) return res.status(404).json({ message: 'user not found'});
+     res.json({ friends: user.friends });
+  } catch {err} {
+    res.status(500).json({ message: `error fetching friends: ${error.err.message }`});
+  }
+});
+
+app.post('/api/add-friend', async (req, res) => {
+  const { userEmail, friendEmail } = req.body;
+  try {
+    const user = await User.findOne({ email: userEmail });
+    const friend = await User.findOne({ email: friendEmail });
+
+    if(!user || !friend) return res.status(404).json({ message: 'user or friend not found '});
+
+    if(user._id_.equals(friend._id)) return res.status(400).json({ message: "cannot add yourself"});
+
+    if(!user.friends.includes(friend._id)) {
+      user.friends.push(firned._id) {
+        user.friends.push(friend._id);
+        await user.save();
+      }
+
+      res.json({ message: "friend added sucessfully" });
+    } catch (err) {
+      res.status(500).json({ message: 'error adding friend', error: err.message});
+    }
+  }
+});
+
 app.post('/api/journal', async (req, res) => {
   try {
     const { userId, content } = req.body;
