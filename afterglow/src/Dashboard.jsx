@@ -1,15 +1,15 @@
+import './css/Dashboard.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:2044/api';
-const WEATHER_API_KEY = "0ca7d9ac3fbf28ff0b412e5961fdcd3e"; // lol idc if someone steals this (dotenv isn't working)
+const WEATHER_API_KEY = '0ca7d9ac3fbf28ff0b412e5961fdcd3e'; // amazing security (dotenv wouldn't work)
 
 export default function Dashboard() {
-  const [name, setName] = useState(''); // 👤
-  const [greeting, setGreeting] = useState(''); // ⏰
-  const [weather, setWeather] = useState(null); // 🌦️
-
+  const [name, setName] = useState('');
+  const [greeting, setGreeting] = useState('');
+  const [weather, setWeather] = useState(null);
   const [journalPrompt, setJournalPrompt] = useState('');
   const [journalEntry, setJournalEntry] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting('good morning');
+    if (hour < 12) setGreeting('good morning!');
     else if (hour < 18) setGreeting('good afternoon');
     else setGreeting('good evening');
   }, []);
@@ -28,23 +28,17 @@ export default function Dashboard() {
     if (email) {
       axios
         .post(`${API_URL}/get-user-name`, { email })
-        .then((res) => {
-          setName(res.data.name || 'friend');
-        })
-        .catch((err) => {
-          console.error('Failed to fetch name:', err);
-          setName('friend');
-        });
+        .then((res) => setName(res.data.name || 'buddy'))
+        .catch(() => setName('buddy'));
     }
   }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
+      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
         try {
           const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${WEATHER_API_KEY}&units=metric`
           );
           const data = await response.json();
           setWeather({
@@ -52,8 +46,8 @@ export default function Dashboard() {
             condition: data.weather[0].main,
             city: data.name,
           });
-        } catch (err) {
-          console.error('Failed to fetch weather:', err);
+        } catch {
+          console.error('Failed to fetch weather');
         }
       });
     }
@@ -75,102 +69,71 @@ export default function Dashboard() {
           ],
         },
         {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         }
       );
 
       const content = response.data.choices?.[0]?.message?.content;
       setJournalPrompt(content || 'no prompt returned');
-    } catch (err) {
-      console.error(`error fetching journal prompt: ${err}`);
+    } catch {
       setError('failed to fetch journal prompt');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEntryChange = (e) => {
-    const lowercaseText = e.target.value.toLowerCase();
-    setJournalEntry(lowercaseText);
-  };
-
   const handleSaveEntry = async () => {
     const userEmail = localStorage.getItem('userEmail');
-
     try {
-      const response = await axios.post(`${API_URL}/check-user`, { email: userEmail });
-
-      if (!response.data.userId) {
-        setError('user not found');
-        return;
-      }
+      const res = await axios.post(`${API_URL}/check-user`, { email: userEmail });
+      if (!res.data.userId) return setError('user not found');
 
       await axios.post(`${API_URL}/journal`, {
-        userId: response.data.userId,
+        userId: res.data.userId,
         content: journalEntry,
       });
+
       alert('journal updated');
-    } catch (err) {
-      console.error(`error saving journal: ${err}`);
+    } catch {
       setError('failed to save journal entry');
     }
   };
 
   return (
-    <div className="dashboard">
-      <h2>{greeting}, {name}! 🌞</h2> {/* 🧑‍💻 */}
-      <p>welcome to afterglow.</p>
+    <div className="dashboard-container">
+      <div className="dashboard-content fade-in">
+        <h2>{greeting}, {name}! 🌞</h2>
+        <p>welcome to afterglow.</p>
 
-      {weather && (
-        <p>
-          it's currently {weather.temp}°C and {weather.condition} in {weather.city}. 🌤️
-        </p>
-      )}
+        {weather && (
+          <p className="weather-info">
+            it's currently {weather.temp}°C and {weather.condition} in {weather.city}. 🌤️
+          </p>
+        )}
 
-      <button onClick={() => navigate('/mood')} style={{ marginTop: '1rem' }}>
-        track your mood
-      </button>
-
-      <button onClick={() => navigate('/emotion')} style={{ marginTop: '1rem' }}>
-        custom mood tracker
-      </button>
-
-      <button onClick={getJournalIdea} style={{ marginTop: '1rem' }}>
-        {loading ? 'getting idea...' : 'get journal idea'}
-      </button>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      {journalPrompt && (
-        <div>
-          <h3>journal idea:</h3>
-          <p>{journalPrompt}</p>
-
-          <textarea
-            value={journalEntry}
-            onChange={handleEntryChange}
-            rows={6}
-            placeholder="start writing here..."
-            style={{
-              width: '100%',
-              marginTop: '1rem',
-              padding: '1rem',
-              fontSize: '1rem',
-              background: '#1e1e1e',
-              color: 'white',
-              border: '1px solid #444',
-              borderRadius: '8px',
-              resize: 'none',
-            }}
-          />
-
-          <button onClick={handleSaveEntry} style={{ marginTop: '1rem' }}>
-            save entry
+        <div className="button-group">
+          <button onClick={() => navigate('/mood')}>track your mood</button>
+          <button onClick={() => navigate('/emotion')}>custom mood tracker</button>
+          <button onClick={getJournalIdea}>
+            {loading ? 'getting idea...' : 'get journal idea'}
           </button>
         </div>
-      )}
+
+        {error && <p className="error-message">{error}</p>}
+
+        {journalPrompt && (
+          <div className="journal-section">
+            <h3>journal idea:</h3>
+            <p className="prompt">{journalPrompt}</p>
+            <textarea
+              value={journalEntry}
+              onChange={(e) => setJournalEntry(e.target.value.toLowerCase())}
+              placeholder="start writing here..."
+            />
+            <button onClick={handleSaveEntry}>save entry</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
