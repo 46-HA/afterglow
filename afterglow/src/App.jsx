@@ -7,6 +7,7 @@ import Login from './Userlogin';
 import SignUp from "./Usersignup";
 import Emotions from './Emotions.jsx';
 import Reminders from './Reminders.jsx';
+import Habit from './Habit.jsx';
 
 import sunIcon from './images/sun.png';
 import moonIcon from './images/moon.png';
@@ -48,6 +49,7 @@ export default function App() {
       <Route path="/mood" element={<MoodTracker />} />
       <Route path="/emotion" element={<Emotions />} />
       <Route path="/reminders" element={<Reminders />} />
+      <Route path="/habit" element={<Habit />} />
     </Routes>
   );
 }

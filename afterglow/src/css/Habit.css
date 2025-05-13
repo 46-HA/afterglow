@@ -1,0 +1,92 @@
+body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background: #121212;
+    color: #f5f5f5;
+}
+
+.habit-container {
+    padding: 3rem 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #1e1e1e;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: fadeIn 1s ease;
+}
+
+h2{
+    text-align: center;
+    color: #f0e68c;
+    text-transform: lowercase;
+    margin-bottom: 2rem;
+}
+
+.unit-selector{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    text-transform: lowercase;
+}
+
+.unit-selector select {
+    background: #2c2c2c2c;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
+}
+
+.habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.habit-card {
+    background: #2a2a2a;
+    padding: 1rem;
+    border-radius: 12px;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-transform: lowercase;
+}
+
+.habit-name {
+    font-size: 1.2rem;
+    color: #f5f5f5;
+}
+
+.habit-time {
+    font-style: italic;
+    color: #bbb;
+}
+
+.habit-card button {
+    background: #b8860b;
+    color: #121212;
+    border: none;
+    padding: 0.6rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    text-transform: lowercase;
+}
+
+.habit-card button:hover {
+    background: #a97400;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

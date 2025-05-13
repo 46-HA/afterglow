@@ -111,13 +111,14 @@ export default function Dashboard() {
           </p>
         )}
 
-        <div className="button-group">
-          <button onClick={() => navigate('/mood')}>track your mood</button>
-          <button onClick={() => navigate('/emotion')}>custom mood tracker</button>
-          <button onClick={getJournalIdea}>
-            {loading ? 'getting idea...' : 'get journal idea'}
-          </button>
-        </div>
+<div className="button-group">
+  <button onClick={() => navigate('/mood')}>track your mood</button>
+  <button onClick={() => navigate('/emotion')}>custom mood tracker</button>
+  <button onClick={getJournalIdea}>
+    {loading ? 'getting idea...' : 'get journal idea'}
+  </button>
+  <button onClick={() => navigate('/habit')}>habit tracker</button> {/* added habit tracker navigation */}
+</div>
 
         {error && <p className="error-message">{error}</p>}
 
