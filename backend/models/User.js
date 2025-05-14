@@ -1,31 +1,36 @@
-// models/User.js - Make sure to fix the required field format
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: true 
+    required: [true, 'first name is required'],
+    trim: true
   },
   dob: {
     type: Date,
-    required: true
+    required: [true, 'date of birth is required']
   },
   email: {
     type: String,
-    required: true,
-    unique: true
+    required: [true, 'email is required'],
+    unique: true,
+    lowercase: true,
+    trim: true
   },
   isVerified: {
     type: Boolean,
     default: false
   },
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now
-  },
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // 👈 added
+  }
 });
 
-
-
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);

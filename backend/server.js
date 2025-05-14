@@ -34,7 +34,7 @@ app.post('/api/check-user', async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
-    res.json({ exists: !!user });
+    res.json({ exists: !!user, userId: user?._id });
   } catch (error) {
     res.status(500).json({ message: 'server error', error: error.message });
   }
@@ -82,40 +82,46 @@ app.post('/api/verify', async (req, res) => {
   }
 });
 
+// ✅ GET FRIENDS
 app.post('/api/friends', async (req, res) => {
   const { email } = req.body;
   try {
-     const user = await.User.findOne({ email }).popular('friends', 'firstName email');
-     if(!user) return res.status(404).json({ message: 'user not found'});
-     res.json({ friends: user.friends });
-  } catch {err} {
-    res.status(500).json({ message: `error fetching friends: ${error.err.message }`});
+    const user = await User.findOne({ email }).populate('friends', 'firstName email');
+    if (!user) return res.status(404).json({ message: 'user not found' });
+    res.json({ friends: user.friends });
+  } catch (err) {
+    res.status(500).json({ message: 'error fetching friends', error: err.message });
   }
 });
 
+// ✅ ADD FRIEND
 app.post('/api/add-friend', async (req, res) => {
   const { userEmail, friendEmail } = req.body;
   try {
     const user = await User.findOne({ email: userEmail });
     const friend = await User.findOne({ email: friendEmail });
 
-    if(!user || !friend) return res.status(404).json({ message: 'user or friend not found '});
-
-    if(user._id_.equals(friend._id)) return res.status(400).json({ message: "cannot add yourself"});
-
-    if(!user.friends.includes(friend._id)) {
-      user.friends.push(firned._id) {
-        user.friends.push(friend._id);
-        await user.save();
-      }
-
-      res.json({ message: "friend added sucessfully" });
-    } catch (err) {
-      res.status(500).json({ message: 'error adding friend', error: err.message});
+    if (!user || !friend) {
+      return res.status(404).json({ message: 'user or friend not found' });
     }
+
+    if (user._id.equals(friend._id)) {
+      return res.status(400).json({ message: 'cannot add yourself' });
+    }
+
+    const alreadyFriends = user.friends.includes(friend._id);
+    if (!alreadyFriends) {
+      user.friends.push(friend._id);
+      await user.save();
+    }
+
+    res.json({ message: 'friend added successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'error adding friend', error: err.message });
   }
 });
 
+// ✅ SAVE JOURNAL ENTRY
 app.post('/api/journal', async (req, res) => {
   try {
     const { userId, content } = req.body;

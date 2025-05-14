@@ -118,6 +118,7 @@ export default function Dashboard() {
     {loading ? 'getting idea...' : 'get journal idea'}
   </button>
   <button onClick={() => navigate('/habit')}>habit tracker</button> {/* added habit tracker navigation */}
+  <button onClick={() => navigate('/friends')}>friends</button> {/* 👈 added */}
 </div>
 
         {error && <p className="error-message">{error}</p>}
