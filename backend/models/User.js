@@ -3,16 +3,16 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, 'first name is required'],
+    required: true,
     trim: true
   },
   dob: {
     type: Date,
-    required: [true, 'date of birth is required']
+    required: true
   },
   email: {
     type: String,
-    required: [true, 'email is required'],
+    required: true,
     unique: true,
     lowercase: true,
     trim: true
@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  friendRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'

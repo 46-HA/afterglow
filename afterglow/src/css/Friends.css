@@ -4,24 +4,24 @@
     background: #1e1e1e;
     padding: 2rem;
     border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 16px (rgba(0,0,0,0.3));
     color: #f5f5f5;
     text-transform: lowercase;
 }
 
-.add-friend-selection {
+.add-friend-section {
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
 }
 
 .add-friend-section input {
-  flex: 1;
-  padding: 0.75rem;
-  border-radius: 10px;
-  border: 1px solid #444;
-  background: #2c2c2c;
-  color: #fff;
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: 1px solid #444;
+    background: #2c2c2c;
+    color: #fff;
 }
 
 .add-friend-section button {
@@ -31,9 +31,14 @@
     color: #121212;
     border-radius: 10px;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
-.success{
+.add-friend-section button:hover {
+    background: #d4af37;
+}
+
+.success {
     color: #98fb98;
     margin-top: 1rem;
 }
@@ -51,7 +56,53 @@
 
 .friends-list li {
     background: #2a2a2a;
-    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     padding: 0.75rem;
     border-radius: 8px;
+}
+
+.requests-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.requests-list li {
+    background: #2a2a2a;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    border-radius:  8px;
+    display: flex;
+    justify-content: space-between;
+    aligin-items: center;
+    gap: 1rem;
+    flex-wraps: wrap;
+}
+
+.requests-list button {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-transform: lowercase;
+    font-weight: bold;
+}
+
+.requests-list button:nth-child(2) {
+    background: #32cd32;
+    color: #fff;
+}
+
+.requests-list button:nth-child(3) {
+    background: #dc143c;
+    color: #fff;
+}
+
+.requests-list button:hover:nth-child(2) {
+    background: #3eea3e;
+}
+
+.requests-list button:hover:nth-child(3) {
+    background: #ff4c4c;
 }
