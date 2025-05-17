@@ -2,31 +2,44 @@ import './css/Habit.css';
 import { useEffect, useState } from 'react';
 
 const timeUnits = ['seconds', 'minutes', 'hours', 'days', 'months'];
-
-const habits = [
-  { name: 'no social media', key: 'habit_social' },
-  { name: 'no sugar', key: 'habit_sugar' },
-  { name: 'woke up before 8am', key: 'habit_wakeup' },
-];
+const STORAGE_KEY = 'afterglow_habits';
 
 export default function Habit() {
   const [unit, setUnit] = useState('days');
-  const [timestamps, setTimestamps] = useState({});
+  const [habits, setHabits] = useState([]);
+  const [newHabitName, setNewHabitName] = useState('');
 
   useEffect(() => {
-    const stored = {};
-    habits.forEach(habit => {
-      const storedTime = localStorage.getItem(habit.key);
-      stored[habit.key] = storedTime ? parseInt(storedTime) : Date.now();
-    });
-    setTimestamps(stored);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      setHabits(JSON.parse(stored));
+    }
   }, []);
 
-  const resetHabit = (key) => {
-    const now = Date.now();
-    const updated = { ...timestamps, [key]: now };
-    setTimestamps(updated);
-    localStorage.setItem(key, now.toString());
+  const saveHabits = (updatedHabits) => {
+    setHabits(updatedHabits);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHabits));
+  };
+
+  const addHabit = () => {
+    if (!newHabitName.trim()) return;
+
+    const newHabit = {
+      id: Date.now(),
+      name: newHabitName.trim().toLowerCase(),
+      timestamp: Date.now(),
+    };
+
+    const updated = [...habits, newHabit];
+    saveHabits(updated);
+    setNewHabitName('');
+  };
+
+  const resetHabit = (id) => {
+    const updated = habits.map(habit =>
+      habit.id === id ? { ...habit, timestamp: Date.now() } : habit
+    );
+    saveHabits(updated);
   };
 
   const getElapsed = (startTime) => {
@@ -47,6 +60,17 @@ export default function Habit() {
   return (
     <div className="habit-container">
       <h2>habit tracker</h2>
+
+      <div className="habit-input">
+        <input
+          type="text"
+          value={newHabitName}
+          onChange={(e) => setNewHabitName(e.target.value)}
+          placeholder="enter a new habit..."
+        />
+        <button onClick={addHabit}>add habit</button>
+      </div>
+
       <div className="unit-selector">
         <label>see time in:</label>
         <select value={unit} onChange={(e) => setUnit(e.target.value)}>
@@ -56,15 +80,21 @@ export default function Habit() {
         </select>
       </div>
 
-      <div className="habit-list">
-        {habits.map((habit) => (
-          <div className="habit-card" key={habit.key}>
-            <p className="habit-name">{habit.name}</p>
-            <p className="habit-time">{getElapsed(timestamps[habit.key])} {unit} since</p>
-            <button onClick={() => resetHabit(habit.key)}>reset</button>
-          </div>
-        ))}
-      </div>
+      {habits.length === 0 ? (
+        <p className="no-habits">no habits tracked yet. add one above 👆</p>
+      ) : (
+        <div className="habit-list">
+          {habits.map((habit) => (
+            <div className="habit-card" key={habit.id}>
+              <p className="habit-name">{habit.name}</p>
+              <p className="habit-time">
+                {getElapsed(habit.timestamp)} {unit} since
+              </p>
+              <button onClick={() => resetHabit(habit.id)}>reset</button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
