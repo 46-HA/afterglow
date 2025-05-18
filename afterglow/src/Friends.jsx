@@ -11,6 +11,12 @@ export default function Friends() {
 
   const userEmail = localStorage.getItem('userEmail');
 
+  useEffect(() => {
+    if (!userEmail) {
+      setError('User not logged in.');
+    }
+  }, [userEmail]);
+
   const fetchFriends = useCallback(async () => {
     try {
       const res = await axios.post('http://localhost:2044/api/friends', {
@@ -89,24 +95,24 @@ export default function Friends() {
           value={friendEmail}
           onChange={(e) => setFriendEmail(e.target.value)}
         />
-        <button onClick={sendRequest}>send request</button>
-      </div>
-
-      {message && <p className="success">{message}</p>}
-      {error && <p className="error">{error}</p>}
-
       <ul className="friends-list">
         {friendsList.map((friend) => (
-          <li key={friend._id}>
-            {friend.firstName} ({friend.email})
+          <li key={friend._id || friend.email}>
+            {friend.firstName || 'Unknown'} ({friend.email || 'No email'})
           </li>
         ))}
       </ul>
-
-      <h3>pending requests</h3>
+        {friendsList.map((friend) => (
+          <li key={friend._id}>
       <ul className="requests-list">
         {pendingRequests.map((req) => (
-          <li key={req._id}>
+          <li key={req._id || req.email}>
+            {req.firstName || 'Unknown'} ({req.email || 'No email'})
+            <button onClick={() => acceptRequest(req.email)}>accept</button>
+            <button onClick={() => rejectRequest(req.email)}>reject</button>
+          </li>
+        ))}
+      </ul>
             {req.firstName} ({req.email})
             <button onClick={() => acceptRequest(req.email)}>accept</button>
             <button onClick={() => rejectRequest(req.email)}>reject</button>
