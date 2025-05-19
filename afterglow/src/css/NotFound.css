@@ -1,0 +1,27 @@
+.notfound-container {
+    text-align: center;
+    padding: 100px 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+.notfound-container h1 {
+    font-size: 100px;
+    margin: 0;
+    color: #ff6f61;
+}
+
+.notfound-container p {
+  font-size: 24px;
+  margin: 10px 0 30px;
+  color: gray;
+}
+
+.notfound-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

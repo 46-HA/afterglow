@@ -9,6 +9,7 @@ import Emotions from './Emotions.jsx';
 import Reminders from './Reminders.jsx';
 import Habit from './Habit.jsx';
 import Friends from './Friends.jsx';
+import NotFound from './NotFound';
 
 import sunIcon from './images/sun.png';
 import moonIcon from './images/moon.png';
@@ -52,6 +53,7 @@ export default function App() {
       <Route path="/reminders" element={<Reminders />} />
       <Route path="/habit" element={<Habit />} />
       <Route path="/friends" element={<Friends />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

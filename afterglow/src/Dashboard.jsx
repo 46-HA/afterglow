@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:2044/api';
-const WEATHER_API_KEY = '0ca7d9ac3fbf28ff0b412e5961fdcd3e'; // amazing security (dotenv wouldn't work)
+const WEATHER_API_KEY = '0ca7d9ac3fbf28ff0b412e5961fdcd3e';
 
 export default function Dashboard() {
   const [name, setName] = useState('');
@@ -14,15 +14,13 @@ export default function Dashboard() {
   const [journalEntry, setJournalEntry] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [friendsList, setFriendsList] = useState([]);
+                                           const [chatOpen, setChatOpen] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('good morning!');
-    else if (hour < 18) setGreeting('good afternoon');
-    else setGreeting('good evening');
-  }, []);
-
+  // Fetch user data
   useEffect(() => {
     const email = localStorage.getItem('userEmail');
     if (email) {
@@ -33,25 +31,32 @@ export default function Dashboard() {
     }
   }, []);
 
+  // Fetch friends list
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-        try {
-          const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${WEATHER_API_KEY}&units=metric`
-          );
-          const data = await response.json();
-          setWeather({
-            temp: data.main.temp,
-            condition: data.weather[0].main,
-            city: data.name,
-          });
-        } catch {
-          console.error('Failed to fetch weather');
-        }
-      });
+    const email = localStorage.getItem('userEmail');
+    if (email) {
+      axios
+        .post(`${API_URL}/friends`, { email })
+        .then((res) => setFriendsList(res.data.friends || []))
+        .catch(() => setError('Could not load friends'));
     }
   }, []);
+
+  const handleChatToggle = () => {
+    setChatOpen(!chatOpen);
+  };
+
+  const sendMessage = () => {
+    if (message.trim() && selectedFriend) {
+      console.log(`Send message: ${message} to ${selectedFriend.email}`);
+      setMessage('');
+    }
+  };
+
+  const handleFriendClick = (friend) => {
+    setSelectedFriend(friend);
+    setChatOpen(true);
+  };
 
   const getJournalIdea = async () => {
     setLoading(true);
@@ -111,15 +116,48 @@ export default function Dashboard() {
           </p>
         )}
 
-<div className="button-group">
-  <button onClick={() => navigate('/mood')}>track your mood</button>
-  <button onClick={() => navigate('/emotion')}>custom mood tracker</button>
-  <button onClick={getJournalIdea}>
-    {loading ? 'getting idea...' : 'get journal idea'}
-  </button>
-  <button onClick={() => navigate('/habit')}>habit tracker</button> {/* added habit tracker navigation */}
-  <button onClick={() => navigate('/friends')}>friends</button> {/* 👈 added */}
-</div>
+        <div className="button-group">
+          <button onClick={() => navigate('/mood')}>track your mood</button>
+          <button onClick={() => navigate('/emotion')}>custom mood tracker</button>
+          <button onClick={getJournalIdea}>
+            {loading ? 'getting idea...' : 'get journal idea'}
+          </button>
+          <button onClick={() => navigate('/habit')}>habit tracker</button>
+          <button onClick={() => navigate('/friends')}>friends</button>
+        </div>
+
+        {/* Friends Chat Button */}
+        <button className="chat-toggle" onClick={handleChatToggle}>
+          {chatOpen ? 'Close Chat' : 'Chat with Friends'}
+        </button>
+
+        {/* Chat UI */}
+        {chatOpen && (
+          <div className="chat-box">
+            <div className="friends-list">
+              <h3>Friends</h3>
+              <ul>
+                {friendsList.map((friend) => (
+                  <li key={friend._id || friend.email} onClick={() => handleFriendClick(friend)}>
+                    {friend.firstName || 'Unknown'} ({friend.email || 'No email'})
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {selectedFriend && (
+              <div className="chat-window">
+                <h4>Chat with {selectedFriend.firstName || 'Unknown'}</h4>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type your message..."
+                />
+                <button onClick={sendMessage}>Send</button>
+              </div>
+            )}
+          </div>
+        )}
 
         {error && <p className="error-message">{error}</p>}
 
